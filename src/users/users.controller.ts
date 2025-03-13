@@ -9,6 +9,6 @@ export class UsersController {
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
   getMe(@Req() req: Request) {
-    return this.usersService.findOne(req['user'].username);
+    return this.usersService.findOne(req['user'].username, false);
   }
 }

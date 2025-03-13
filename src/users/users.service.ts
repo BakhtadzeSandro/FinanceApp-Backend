@@ -11,11 +11,18 @@ export class UsersService {
     return this.userModel.find().exec();
   }
 
-  async findOne(username: string): Promise<UserDocument | null> {
-    return this.userModel
-      .findOne({
-        username,
-      })
-      .select('-password -__v');
+  async findOne(
+    username: string,
+    isLogin: boolean,
+  ): Promise<UserDocument | null> {
+    return isLogin
+      ? this.userModel.findOne({
+          username,
+        })
+      : this.userModel
+          .findOne({
+            username,
+          })
+          .select('-password -__v');
   }
 }

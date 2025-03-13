@@ -30,7 +30,7 @@ export class AuthService {
     username: string,
     pass: string,
   ): Promise<Record<string, string>> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOne(username, true);
     const isPasswordCorrect = await bcrypt.compare(pass, user?.password);
     if (user?.username !== username || !isPasswordCorrect) {
       throw new UnauthorizedException('Incorrect username or password');
