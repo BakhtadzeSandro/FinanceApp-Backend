@@ -1,11 +1,9 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 @Schema()
 export class User {
-  @Prop({})
-  _id: string;
-
   @Prop({ required: true })
   firstName: string;
 
@@ -18,7 +16,7 @@ export class User {
   @Prop({ required: true, unique: true, lowercase: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, hide: true, hideJSON: true })
   password: string;
 }
 
