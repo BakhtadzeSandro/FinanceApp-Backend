@@ -22,6 +22,9 @@ export class AuthService {
       username: createUserDto.username,
       email: createUserDto.email,
       password: hashedPassword,
+      currentBalance: 0,
+      income: 0,
+      expense: 0,
     });
     return user.save();
   }

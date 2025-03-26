@@ -18,6 +18,15 @@ export class User {
 
   @Prop({ required: true, hide: true, hideJSON: true })
   password: string;
+
+  @Prop({ required: true })
+  income: number;
+
+  @Prop({ required: true })
+  expense: number;
+
+  @Prop({ required: true })
+  currentBalance: number;
 }
 
 export class CreateUserDto {
