@@ -27,6 +27,9 @@ export class User {
 
   @Prop({ required: true })
   currentBalance: number;
+
+  @Prop()
+  avatar: string;
 }
 
 export class CreateUserDto {
@@ -46,6 +49,9 @@ export class CreateUserDto {
 
   @Prop({ required: true })
   password: string;
+
+  @Prop()
+  avatar: string;
 }
 
 export type UserDocument = User & Document;
