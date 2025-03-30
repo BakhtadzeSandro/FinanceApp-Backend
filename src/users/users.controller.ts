@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -37,5 +38,13 @@ export class UsersController {
     @Body() payload: UpdateUserDto | UpdatePasswordDto,
   ) {
     return this.usersService.updateUser(payload, userId.id);
+  }
+
+  @Get('check-user')
+  checkIfUserExists(
+    @Query('field') field: string,
+    @Query('value') value: string,
+  ) {
+    return this.usersService.checkIfUserExists(field, value);
   }
 }

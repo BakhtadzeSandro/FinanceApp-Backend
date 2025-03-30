@@ -40,12 +40,19 @@ export class UsersService {
       await this.userModel.findByIdAndUpdate(userId, {
         password: newPassword,
       });
-      return 'Password Updated Succesfully';
     } else {
       const updatedUser = await this.userModel
         .findByIdAndUpdate(userId, { $set: payload.userInfo }, { new: true })
         .select('-password -__v');
       return updatedUser;
     }
+  }
+
+  async checkIfUserExists(field: string, value: string) {
+    const userExists = await this.userModel.findOne({
+      [field]: value,
+    });
+
+    return !!userExists;
   }
 }
