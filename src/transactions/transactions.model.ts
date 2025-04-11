@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { mongoose } from '@typegoose/typegoose';
 import {
   IsString,
   IsDate,
@@ -14,11 +15,17 @@ export enum TransactionType {
 
 @Schema()
 export class Transaction {
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  userId: string;
+
   @Prop()
   category: string;
 
   @Prop({ required: true })
   date: Date;
+
+  @Prop({ required: true })
+  dateAdded: Date;
 
   @Prop({ required: true })
   amount: number;
@@ -33,8 +40,13 @@ export class Transaction {
 export class CreateTransactionDto {
   category: string;
 
+  userId: string;
+
   @IsDateString()
   date: Date;
+
+  @IsDateString()
+  dateAdded: Date;
 
   @IsNumber()
   amount: number;
@@ -44,6 +56,17 @@ export class CreateTransactionDto {
 
   @IsEnum(TransactionType)
   type: TransactionType;
+}
+
+export class TableData {
+  paginator: Paginator;
+  filter: Record<string, string>;
+  searchKey: string;
+}
+
+export class Paginator {
+  page: number;
+  limit: number;
 }
 
 export type TransactionDocument = Transaction & Document;

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   CreateTransactionDto,
+  TableData,
   TransactionDocument,
 } from './transactions.model';
 import { Model } from 'mongoose';
@@ -15,42 +16,34 @@ export class TransactionsService {
     private transactionModel: Model<TransactionDocument>,
   ) {}
 
-  async findAll(
-    page: number,
-    limit: number,
-    searchKey: string,
-    category: string,
-  ) {
-    const skip = (page - 1) * limit;
+  async findAll(userId: string, tableData: TableData) {
+    const skip = (tableData.paginator.page - 1) * tableData.paginator.limit;
 
-    const search = searchKey?.trim();
+    const search = tableData.searchKey?.trim();
 
-    let query: Record<string, unknown> = search
-      ? {
-          recipientOrSender: { $regex: search, $options: 'i' },
-        }
-      : {};
+    let query: Record<string, any> = {
+      userId,
+    };
 
-    if (category) {
-      query = {
-        ...query,
-        category: {
-          $regex: category,
-        },
-      };
+    if (search) {
+      query.recipientOrSender = { $regex: search, $options: 'i' };
+    }
+
+    if (tableData.filter['category']) {
+      query.category = { $regex: tableData.filter['category'], $options: 'i' };
     }
 
     const items = await this.transactionModel
       .find(query)
       .skip(skip)
-      .limit(limit)
-      .sort({ date: -1 });
+      .limit(tableData.paginator.limit)
+      .sort({ dateAdded: -1 });
     const totalCount = await this.transactionModel.countDocuments(query);
     return {
       data: items,
       paginator: {
-        page: 1,
-        limit: limit,
+        page: tableData.paginator.page,
+        limit: tableData.paginator.limit,
         totalCount,
       },
     };
