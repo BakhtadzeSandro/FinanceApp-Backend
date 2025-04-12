@@ -18,6 +18,13 @@ export class Transaction {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   userId: string;
 
+  @Prop({
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Transaction',
+  })
+  _id: string;
+
   @Prop()
   category: string;
 

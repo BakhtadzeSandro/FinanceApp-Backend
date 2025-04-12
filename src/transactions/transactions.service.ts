@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   CreateTransactionDto,
   TableData,
+  Transaction,
   TransactionDocument,
 } from './transactions.model';
 import { Model } from 'mongoose';
@@ -21,7 +22,7 @@ export class TransactionsService {
 
     const search = tableData.searchKey?.trim();
 
-    let query: Record<string, any> = {
+    const query: Record<string, any> = {
       userId,
     };
 
@@ -55,5 +56,17 @@ export class TransactionsService {
       skip: (this.defaultPage - 1) * 10,
       take: this.defaultLimit,
     });
+  }
+
+  async updateTransaction(payload: Transaction) {
+    const updatedTransaction = await this.transactionModel.findByIdAndUpdate(
+      payload._id,
+      { $set: payload },
+      { new: true },
+    );
+
+    console.log(updatedTransaction);
+
+    return updatedTransaction;
   }
 }

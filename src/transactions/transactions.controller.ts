@@ -2,13 +2,14 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
-import { CreateTransactionDto, TableData } from './transactions.model';
+import { CreateTransactionDto, Transaction } from './transactions.model';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('transactions')
@@ -26,6 +27,11 @@ export class TransactionsController {
       ...createTransactionDto,
       userId,
     });
+  }
+
+  @Patch(':id')
+  editTransaction(@Body() payload: Transaction) {
+    return this.transactionsService.updateTransaction(payload);
   }
 
   @UseGuards(AuthGuard('jwt'))
