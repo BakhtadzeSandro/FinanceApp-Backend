@@ -42,6 +42,7 @@ export class TransactionsController {
     @Query('limit') limit: number,
     @Query('search') search: string,
     @Query('filter') filter: string,
+    @Query('sort') sort: string,
   ) {
     const userId = req['user']._id;
     return this.transactionsService.findAll(userId, {
@@ -51,6 +52,7 @@ export class TransactionsController {
       },
       filter: JSON.parse(filter),
       searchKey: search,
+      sort: JSON.parse(sort),
     });
   }
 }

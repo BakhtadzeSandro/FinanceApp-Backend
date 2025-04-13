@@ -69,6 +69,10 @@ export class TableData {
   paginator: Paginator;
   filter: Record<string, string>;
   searchKey: string;
+  sort: {
+    field: string;
+    order: 1 | -1;
+  };
 }
 
 export class Paginator {

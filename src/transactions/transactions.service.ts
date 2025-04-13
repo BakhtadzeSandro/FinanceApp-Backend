@@ -6,7 +6,7 @@ import {
   Transaction,
   TransactionDocument,
 } from './transactions.model';
-import { Model } from 'mongoose';
+import { Model, SortOrder } from 'mongoose';
 
 @Injectable()
 export class TransactionsService {
@@ -34,11 +34,16 @@ export class TransactionsService {
       query.category = { $regex: tableData.filter['category'], $options: 'i' };
     }
 
+    const sortOption = tableData.sort.field
+      ? { [tableData.sort.field]: tableData.sort.order }
+      : { dateAdded: -1 };
+
     const items = await this.transactionModel
       .find(query)
       .skip(skip)
       .limit(tableData.paginator.limit)
-      .sort({ dateAdded: -1 });
+      .sort(sortOption as Record<string, SortOrder>);
+
     const totalCount = await this.transactionModel.countDocuments(query);
     return {
       data: items,
