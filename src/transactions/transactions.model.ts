@@ -18,6 +18,29 @@ export class Transaction {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   userId: string;
 
+  @Prop()
+  category: string;
+
+  @Prop({ required: true })
+  date: Date;
+
+  @Prop({ required: true })
+  dateAdded: Date;
+
+  @Prop({ required: true })
+  amount: number;
+
+  @Prop({ required: true })
+  recipientOrSender: string;
+
+  @Prop({ required: true })
+  type: TransactionType;
+}
+
+export class UpdateTransactionDto {
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  userId: string;
+
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,

@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   CreateTransactionDto,
   TableData,
-  Transaction,
   TransactionDocument,
+  UpdateTransactionDto,
 } from './transactions.model';
 import { Model, SortOrder } from 'mongoose';
 
@@ -63,14 +63,16 @@ export class TransactionsService {
     });
   }
 
-  async updateTransaction(payload: Transaction) {
+  async deleteTransaction(transactionId: string) {
+    await this.transactionModel.deleteOne({ transactionId });
+  }
+
+  async updateTransaction(payload: UpdateTransactionDto) {
     const updatedTransaction = await this.transactionModel.findByIdAndUpdate(
       payload._id,
       { $set: payload },
       { new: true },
     );
-
-    console.log(updatedTransaction);
 
     return updatedTransaction;
   }
