@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -33,14 +34,22 @@ export class TransactionsController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  editTransaction(@Body() payload: UpdateTransactionDto) {
-    return this.transactionsService.updateTransaction(payload);
+  async editTransaction(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() payload: UpdateTransactionDto,
+  ) {
+    const userId = req['user']._id;
+    return this.transactionsService.updateTransaction(id, userId, payload);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  deleteTransaction(@Body() transactionId: string) {
-    return this.transactionsService.deleteTransaction(transactionId);
+  async deleteTransaction(@Req() req: Request, @Param('id') id: string) {
+    const userId = req['user']._id;
+    return this.transactionsService.deleteTransaction(id, userId);
   }
 
   @UseGuards(AuthGuard('jwt'))

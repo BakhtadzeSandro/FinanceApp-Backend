@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   CreateTransactionDto,
@@ -63,17 +63,24 @@ export class TransactionsService {
     });
   }
 
-  async deleteTransaction(transactionId: string) {
-    await this.transactionModel.deleteOne({ transactionId });
-  }
-
-  async updateTransaction(payload: UpdateTransactionDto) {
-    const updatedTransaction = await this.transactionModel.findByIdAndUpdate(
-      payload._id,
+  async updateTransaction(
+    id: string,
+    userId: string,
+    payload: UpdateTransactionDto,
+  ) {
+    const updated = await this.transactionModel.findOneAndUpdate(
+      { _id: id, userId },
       { $set: payload },
       { new: true },
     );
+    if (!updated) throw new NotFoundException('Transaction not found');
+    return updated;
+  }
 
-    return updatedTransaction;
+  async deleteTransaction(id: string, userId: string) {
+    const result = await this.transactionModel.deleteOne({ _id: id, userId });
+    if (result.deletedCount === 0) {
+      throw new NotFoundException('Transaction not found or not yours');
+    }
   }
 }
